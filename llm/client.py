@@ -18,8 +18,8 @@ class GeminiClient:
     installing langchain-google-genai.
     """
 
-    def __init__(self, model: str = "gemini-1.5-flash", temperature: float = 0.7):
-        self.model = model
+    def __init__(self, model: str | None = None, temperature: float = 0.7):
+        self.model = model or os.environ.get("LLM_MODEL", "gemini-1.5-flash")
         self.temperature = temperature
         self._llm = None
 
