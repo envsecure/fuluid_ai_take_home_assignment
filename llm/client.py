@@ -6,20 +6,16 @@ import os
 logger = logging.getLogger(__name__)
 
 
-class GeminiClient:
+class OpenRouterClient:
     """
-    Wrapper around ChatGoogleGenerativeAI with error handling.
+    Wrapper around ChatOpenAI configured for OpenRouter.
 
-    Uses GOOGLE_API_KEY from environment. Falls back to a mock
+    Uses OPENROUTER_API_KEY from environment. Falls back to a mock
     if no API key is set (for testing).
-
-    The ChatGoogleGenerativeAI import is lazy — only loaded when
-    an API key is actually present, so MockLLM works without
-    installing langchain-google-genai.
     """
 
     def __init__(self, model: str | None = None, temperature: float = 0.7):
-        self.model = model or os.environ.get("LLM_MODEL", "gemini-1.5-flash")
+        self.model = model or os.environ.get("LLM_MODEL", "tencent/hy3:free")
         self.temperature = temperature
         self._llm = None
 
@@ -27,19 +23,19 @@ class GeminiClient:
     def llm(self):
         if self._llm is None:
 
-            api_key = os.environ.get("GOOGLE_API_KEY")
+            api_key = os.environ.get("OPENROUTER_API_KEY")
             if not api_key:
                 from llm.mock_client import MockLLM
-                logger.warning("No GOOGLE_API_KEY set. Using MockLLM.")
+                logger.warning("No OPENROUTER_API_KEY set. Using MockLLM.")
                 return MockLLM()
 
-            from langchain_google_genai import ChatGoogleGenerativeAI
+            from langchain_openai import ChatOpenAI
 
-            self._llm = ChatGoogleGenerativeAI(
+            self._llm = ChatOpenAI(
                 model=self.model,
+                api_key=api_key,
+                base_url="https://openrouter.ai/api/v1",
                 temperature=self.temperature,
-                google_api_key=api_key,
-                convert_system_message_to_human=True,
             )
         return self._llm
 
@@ -50,6 +46,6 @@ class GeminiClient:
         return await self.llm.ainvoke(messages)
 
 
-def get_llm() -> GeminiClient:
-    """Factory: returns a configured GeminiClient."""
-    return GeminiClient()
+def get_llm() -> OpenRouterClient:
+    """Factory: returns a configured OpenRouterClient."""
+    return OpenRouterClient()
