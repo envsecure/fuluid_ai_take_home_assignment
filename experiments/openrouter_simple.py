@@ -12,8 +12,11 @@ Requires: pip install langchain-openai
 
 import os
 
+from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
+
+load_dotenv()
 
 MODEL = "openai/gpt-3.5-turbo"
 
@@ -25,8 +28,8 @@ def build_llm() -> ChatOpenAI:
 
     return ChatOpenAI(
         model=MODEL,
-        openai_api_key=api_key,
-        openai_api_base="https://openrouter.ai/api/v1",
+        api_key=api_key,
+        base_url="https://openrouter.ai/api/v1",
         temperature=0.7,
     )
 
