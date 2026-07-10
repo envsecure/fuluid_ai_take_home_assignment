@@ -39,6 +39,7 @@ class GeminiClient:
                 model=self.model,
                 temperature=self.temperature,
                 google_api_key=api_key,
+                convert_system_message_to_human=True,
             )
         return self._llm
 
