@@ -97,7 +97,6 @@ def _render_markdown(doc: Document, markdown_text: str) -> None:
     lines = markdown_text.split("\n")
     in_table = False
     table_buffer = []
-    list_counters: dict[int, int] = {}
 
     i = 0
     while i < len(lines):
@@ -156,10 +155,7 @@ def _render_markdown(doc: Document, markdown_text: str) -> None:
         # Numbered list
         match = re.match(r"^(\d+)\.\s+(.*)", stripped)
         if match:
-            num = int(match.group(1))
             text = match.group(2)
-            indent_level = _count_leading_spaces(line)
-            list_counters[indent_level] = num
             p = doc.add_paragraph(text, style="List Number")
             _apply_bold_inline(p)
             i += 1
