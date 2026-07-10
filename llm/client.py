@@ -3,8 +3,6 @@ from __future__ import annotations
 import logging
 import os
 
-from langchain_google_genai import ChatGoogleGenerativeAI
-
 logger = logging.getLogger(__name__)
 
 
@@ -14,15 +12,19 @@ class GeminiClient:
 
     Uses GOOGLE_API_KEY from environment. Falls back to a mock
     if no API key is set (for testing).
+
+    The ChatGoogleGenerativeAI import is lazy — only loaded when
+    an API key is actually present, so MockLLM works without
+    installing langchain-google-genai.
     """
 
     def __init__(self, model: str = "gemini-1.5-flash", temperature: float = 0.7):
         self.model = model
         self.temperature = temperature
-        self._llm: ChatGoogleGenerativeAI | None = None
+        self._llm = None
 
     @property
-    def llm(self) -> ChatGoogleGenerativeAI:
+    def llm(self):
         if self._llm is None:
 
             api_key = os.environ.get("GOOGLE_API_KEY")
@@ -30,6 +32,8 @@ class GeminiClient:
                 from llm.mock_client import MockLLM
                 logger.warning("No GOOGLE_API_KEY set. Using MockLLM.")
                 return MockLLM()
+
+            from langchain_google_genai import ChatGoogleGenerativeAI
 
             self._llm = ChatGoogleGenerativeAI(
                 model=self.model,
