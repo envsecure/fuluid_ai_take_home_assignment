@@ -229,7 +229,7 @@ def _shade_cell(cell, color: RGBColor) -> None:
     shading_elem = shading.makeelement(qn("w:shd"), {
         qn("w:val"): "clear",
         qn("w:color"): "auto",
-        qn("w:fill"): f"{color.r:02X}{color.g:02X}{color.b:02X}",
+        qn("w:fill"): str(color),
     })
     shading.append(shading_elem)
 
