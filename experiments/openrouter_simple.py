@@ -31,6 +31,7 @@ def build_llm() -> ChatOpenAI:
         api_key=api_key,
         base_url="https://openrouter.ai/api/v1",
         temperature=0.7,
+        max_tokens=16000,
     )
 
 
