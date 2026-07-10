@@ -18,7 +18,7 @@ from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
-MODEL = "openai/gpt-3.5-turbo"
+MODEL = "tencent/hy3:free"
 
 
 def build_llm() -> ChatOpenAI:
