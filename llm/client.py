@@ -36,6 +36,7 @@ class OpenRouterClient:
                 api_key=api_key,
                 base_url="https://openrouter.ai/api/v1",
                 temperature=self.temperature,
+                max_tokens=16000,
             )
         return self._llm
 
